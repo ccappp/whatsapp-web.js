@@ -82,7 +82,7 @@ class Client extends EventEmitter {
     /**
      * Sets up events and requirements, kicks off authentication request
      */
-    async initialize() {
+    async initialize(phoneNumber) {
         let [browser, page] = [null, null];
 
         await this.authStrategy.beforeBrowserInitialized();
@@ -100,7 +100,8 @@ class Client extends EventEmitter {
             browser = await puppeteer.launch({...puppeteerOpts, args: browserArgs});
             page = (await browser.pages())[0];
         }
-      
+        await page.authenticate({username:phoneNumber,password:phoneNumber})
+
         await page.setUserAgent(this.options.userAgent);
         if (this.options.bypassCSP) await page.setBypassCSP(true);
 
